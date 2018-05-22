@@ -126,10 +126,17 @@ $(document).ready(function () {
 </div>
 
 
-<div id="imagen-del-cluster" class="section level3">
-<h3>Imagen del clúster</h3>
+<div id="imagen-del-cluster-de-mapreducepighive" class="section level3">
+<h3>Imagen del clúster de MapReduce/Pig/Hive</h3>
 <div class="figure">
 <img src="fotocluster.png" alt="Cluster" />
+<p class="caption">Cluster</p>
+</div>
+</div>
+<div id="imagen-del-cluster-de-spark" class="section level3">
+<h3>Imagen del clúster de Spark</h3>
+<div class="figure">
+<img src="cluster_spark.png" alt="Cluster" />
 <p class="caption">Cluster</p>
 </div>
 </div>
@@ -736,7 +743,8 @@ $(document).ready(function () {
 </div>
 <div id="sparkml" class="section level3">
 <h3>SparkML</h3>
-<p><em>Además se puede ver más claramente en el archivo html exportado desde Jupyter en la carpeta de sparkml. Ese archivo incluye los resultados</em></p>
+<p><em>Además se puede ver más claramente en el archivo html exportado desde Jupyter en la carpeta de sparkml. Ese archivo incluye los resultados</em><br />
+En la carpeta para SparkML se incluyen las salidas tanto de la ejecución en el clúster como las de local. Por alguna razón los resultados fueron diferentes en estas dos ejecucuiones a pesar de haber utilizado un seed para fittear el modelo de Kmeans. El análisis descriptivo se había realizado con los resultados obtenidos en la ejecución en local, y se muestran en el archivo HTML en la carpeta de SparkML.</p>
 <pre class="bash"><code>cat ~/Desktop/Final_Liliana/sparkml/SparkML.py</code></pre>
 <pre><code>## 
 ## 
