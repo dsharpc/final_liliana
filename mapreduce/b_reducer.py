@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#cat ../datos/defun_2016.csv | python3 b_mapper.py | sort | python3 b_reducer.py
+
 import sys
 previous = None
 sum = 0

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Francisco Bahena, Cristian Challu, Eduardo Hidalgo, Daniel Sharp" />
+
+<meta name="date" content="2018-05-21" />
+
+<title>Examen Final MGE</title>
+
+<script src="Examen_final_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Examen_final_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="Examen_final_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Examen_final_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Examen_final_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="Examen_final_files/navigation-1.1/tabsets.js"></script>
+<link href="Examen_final_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="Examen_final_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Examen Final MGE</h1>
+<h4 class="author"><em>Francisco Bahena, Cristian Challu, Eduardo Hidalgo, Daniel Sharp</em></h4>
+<h4 class="date"><em>May 21, 2018</em></h4>
+
+</div>
+
+
+<div id="imagen-del-cluster" class="section level3">
+<h3>Imagen del clúster</h3>
+<div class="figure">
+<img src="fotocluster.png" alt="Cluster" />
+<p class="caption">Cluster</p>
+</div>
+</div>
+<div id="mapreduce" class="section level3">
+<h3>MapReduce:</h3>
+<div id="a.-cuantas-defunciones-tenemos-por-mes-campo-mes_ocurr" class="section level4">
+<h4>a. ¿Cuántas defunciones tenemos por mes? campo mes_ocurr</h4>
+<p><strong>Mapper</strong></p>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/mapreduce/a_mapper.py</code></pre>
+<pre><code>## #!/usr/bin/env python
+## import sys
+## import re
+## 
+## # Generamos diccionario con los nombres de los meses
+## meses_dic = {}
+## # Leemos la tabla de los meses a memoria
+## meses = open(&#39;demeses.csv&#39;,&#39;r&#39;)
+## # Llenamos el diccionario con los valores de la tabla
+## for line in meses:
+##     line = line.strip()
+##     splits = line.split(&#39;,&#39;)
+##     meses_dic[splits[0]] = splits[1]
+## meses.close()
+## 
+## for line in sys.stdin:
+##     line = line.strip()
+##     line = line.strip(&#39;&quot;&#39;)
+##     linea = re.split(&#39;,&#39;,line)
+##     # Hacemos el join de la tabla
+##     if linea[15] in meses_dic:
+##         linea.append(meses_dic[linea[15]])
+##         print(linea[59] + &quot;\t1&quot;)</code></pre>
+<p><strong>Reducer</strong></p>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/mapreduce/a_reducer.py</code></pre>
+<pre><code>## #!/usr/bin/env python
+## 
+## import sys
+## previous = None
+## sum = 0
+## 
+## for line in sys.stdin:
+##   key, value = line.split(&#39;\t&#39;)
+##   if key != previous:
+##       if previous is not None:
+##         print(previous + &#39;\t&#39; + str(sum))
+##       previous = key
+##       sum = 0
+##   sum+=1
+## print(previous + &#39;\t&#39; + str(sum))</code></pre>
+</div>
+<div id="b.-cuantas-defunciones-tenemos-por-violencia-familiar-campo-vio_fami" class="section level4">
+<h4>b. ¿Cuántas defunciones tenemos por violencia familiar? campo vio_fami</h4>
+<p><strong>Mapper</strong></p>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/mapreduce/b_mapper.py</code></pre>
+<pre><code>## #!/usr/bin/env python
+## import sys
+## import re
+## 
+## # Generamos diccionario 
+## vio_dic = {}
+## # Leemos la tabla 
+## vio = open(&#39;deviofam.csv&#39;,&#39;r&#39;)
+## # Llenamos el diccionario con los valores de la tabla
+## for line in vio:
+##     line = line.strip()
+##     splits = line.split(&#39;,&#39;)
+##     vio_dic[splits[0]] = splits[1]
+## vio.close()
+## 
+## for line in sys.stdin:
+##     line = line.strip()
+##     line = line.strip(&#39;&quot;&#39;)
+##     linea = re.split(&#39;,&#39;,line)
+##     # Hacemos el join de la tabla
+##     if linea[43] in vio_dic:
+##         linea.append(vio_dic[linea[43]])
+##         print(linea[59] + &quot;\t1&quot;)</code></pre>
+<p><strong>Reducer</strong></p>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/mapreduce/b_reducer.py</code></pre>
+<pre><code>## #!/usr/bin/env python
+## 
+## import sys
+## previous = None
+## sum = 0
+## 
+## for line in sys.stdin:
+##   key, value = line.split(&#39;\t&#39;)
+##   if key != previous:
+##       if previous is not None:
+##         print(previous + &#39;\t&#39; + str(sum))
+##       previous = key
+##       sum = 0
+##   sum+=1
+## print(previous + &#39;\t&#39; + str(sum))</code></pre>
+</div>
+</div>
+<div id="pig" class="section level3">
+<h3>Pig</h3>
+<div id="a.-indica-el-total-de-decesos-en-ese-estado-rightarrow-no-olivides-poner-la-clave-de-la-entidad-y-el-nombre" class="section level4">
+<h4>a. Indica el total de decesos en ese estado <span class="math inline">\(\rightarrow\)</span> No olivides poner la clave de la entidad y el nombre</h4>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/pig/pig_a.pig</code></pre>
+<pre><code>## --- Carga de datos
+## 
+## defunc = LOAD &#39;s3://finalmge/defun_2016.csv&#39; USING PigStorage(&#39;,&#39;) AS (
+## ent_regis:chararray,
+## mun_regis:chararray,
+## ent_resid:chararray,
+## mun_resid:chararray,
+## tloc_resid:chararray,
+## loc_resid:chararray,
+## ent_ocurr:chararray,
+## mun_ocurr:chararray,
+## tloc_ocurr:chararray,
+## loc_ocurr:chararray,
+## causa_def:chararray,
+## lista_mex:chararray,
+## sexo:chararray,
+## edad:chararray,
+## dia_ocurr:chararray,
+## mes_ocurr:chararray,
+## anio_ocur:chararray,
+## dia_regis:chararray,
+## mes_regis:chararray,
+## anio_regis:chararray,
+## dia_nacim:chararray,
+## mes_nacim:chararray,
+## anio_nacim:chararray,
+## ocupacion:chararray,
+## escolarida:chararray,
+## edo_civil:chararray,
+## presunto:chararray,
+## ocurr_trab:chararray,
+## lugar_ocur:chararray,
+## necropsia:chararray,
+## asist_medi:chararray,
+## sitio_ocur:chararray,
+## cond_cert:chararray,
+## nacionalid:chararray,
+## derechohab:chararray,
+## embarazo:chararray,
+## rel_emba:chararray,
+## horas:chararray,
+## minutos:chararray,
+## capitulo:chararray,
+## grupo:chararray,
+## lista1:chararray,
+## gr_lismex:chararray,
+## vio_fami:chararray,
+## area_ur:chararray,
+## edad_agru:chararray,
+## complicaro:chararray,
+## dia_cert:chararray,
+## mes_cert:chararray,
+## anio_cert:chararray,
+## maternas:chararray,
+## lengua:chararray,
+## cond_act:chararray,
+## par_agre:chararray,
+## ent_ocules:chararray,
+## mun_ocules:chararray,
+## loc_ocules:chararray,
+## razon_m:chararray,
+## dis_re_oax:chararray);
+## 
+## edos = LOAD &#39;s3://finalmge/decateml.CSV&#39; USING PigStorage(&#39;,&#39;) AS (
+## cve_ent:chararray,
+## cve_mun:chararray,
+## cve_loc:chararray,
+## nom_loc:chararray);
+## 
+## --- Inciso A: ¿Cuál es el estado de México donde hay más muertes? campo ent_ocurr
+## --- Indica el total de decesos en ese estado $\rightarrow$ No olivides poner la clave de la entidad y el nombre
+## 
+## preclean_edos = FOREACH edos GENERATE REPLACE(cve_ent,&#39;&quot;&#39;,&#39;&#39;) as (cve_ent:chararray),REPLACE(cve_mun,&#39;&quot;&#39;,&#39;&#39;)as (cve_mun:chararray), REPLACE(nom_loc,&#39;&quot;&#39;,&#39;&#39;) as (nom_loc:chararray);  
+## 
+## clean_edos = foreach preclean_edos generate TRIM(cve_ent) as (cve_ent:chararray),TRIM(cve_mun) as (cve_mun:chararray), TRIM(nom_loc) as (nom_loc:chararray);
+## solo_edos = filter clean_edos BY (cve_mun == &#39;000&#39;);
+## 
+## preclean_defunc = foreach defunc generate REPLACE(ent_ocurr,&#39;&quot;&#39;,&#39;&#39;) as (ent_ocurr:chararray);
+## clean_defunc = foreach preclean_defunc generate TRIM(ent_ocurr) as (ent_ocurr:chararray);
+## 
+## joined_edos = JOIN clean_defunc BY ent_ocurr, solo_edos BY cve_ent;
+## 
+## grouped = GROUP joined_edos BY (cve_ent,nom_loc);
+## 
+## res = foreach grouped GENERATE group, COUNT(joined_edos) as ocurrencias;
+## 
+## res_sorted = ORDER res BY ocurrencias DESC;
+## 
+## res_final = LIMIT res_sorted 1;
+## 
+## flat = foreach res_final GENERATE FLATTEN($0), $1;
+## 
+## store flat into &#39;s3://finalmge/pig/a/&#39; using PigStorage(&#39;,&#39;);</code></pre>
+</div>
+<div id="b.-indica-por-entidad-donde-residia-ordenado-descendentemente-por-numero-de-decesos-campo-ent_resid-rightarrow-no-olvides-poner-la-clave-de-cada-entidad-y-el-nombre" class="section level4">
+<h4>b. Indica por entidad donde residía ordenado descendentemente por número de decesos, campo ent_resid <span class="math inline">\(\rightarrow\)</span> No olvides poner la clave de cada entidad y el nombre</h4>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/pig/pig_b.pig</code></pre>
+<pre><code>## --- Carga de datos
+## 
+## defunc = LOAD &#39;s3://finalmge/defun_2016.csv&#39; USING PigStorage(&#39;,&#39;) AS (
+## ent_regis:chararray,
+## mun_regis:chararray,
+## ent_resid:chararray,
+## mun_resid:chararray,
+## tloc_resid:chararray,
+## loc_resid:chararray,
+## ent_ocurr:chararray,
+## mun_ocurr:chararray,
+## tloc_ocurr:chararray,
+## loc_ocurr:chararray,
+## causa_def:chararray,
+## lista_mex:chararray,
+## sexo:chararray,
+## edad:chararray,
+## dia_ocurr:chararray,
+## mes_ocurr:chararray,
+## anio_ocur:chararray,
+## dia_regis:chararray,
+## mes_regis:chararray,
+## anio_regis:chararray,
+## dia_nacim:chararray,
+## mes_nacim:chararray,
+## anio_nacim:chararray,
+## ocupacion:chararray,
+## escolarida:chararray,
+## edo_civil:chararray,
+## presunto:chararray,
+## ocurr_trab:chararray,
+## lugar_ocur:chararray,
+## necropsia:chararray,
+## asist_medi:chararray,
+## sitio_ocur:chararray,
+## cond_cert:chararray,
+## nacionalid:chararray,
+## derechohab:chararray,
+## embarazo:chararray,
+## rel_emba:chararray,
+## horas:chararray,
+## minutos:chararray,
+## capitulo:chararray,
+## grupo:chararray,
+## lista1:chararray,
+## gr_lismex:chararray,
+## vio_fami:chararray,
+## area_ur:chararray,
+## edad_agru:chararray,
+## complicaro:chararray,
+## dia_cert:chararray,
+## mes_cert:chararray,
+## anio_cert:chararray,
+## maternas:chararray,
+## lengua:chararray,
+## cond_act:chararray,
+## par_agre:chararray,
+## ent_ocules:chararray,
+## mun_ocules:chararray,
+## loc_ocules:chararray,
+## razon_m:chararray,
+## dis_re_oax:chararray);
+## 
+## edos = LOAD &#39;s3://finalmge/decateml.CSV&#39; USING PigStorage(&#39;,&#39;) AS (
+## cve_ent:chararray,
+## cve_mun:chararray,
+## cve_loc:chararray,
+## nom_loc:chararray);
+## 
+## --- Inciso B: Indica por entidad donde residía ordenado descendentemente por número de decesos, campo ent_resid. No olvides poner la clave de cada entidad y el nombre
+## 
+## preclean_edos = FOREACH edos GENERATE REPLACE(cve_ent,&#39;&quot;&#39;,&#39;&#39;) as (cve_ent:chararray),REPLACE(cve_mun,&#39;&quot;&#39;,&#39;&#39;)as (cve_mun:chararray), REPLACE(nom_loc,&#39;&quot;&#39;,&#39;&#39;) as (nom_loc:chararray);  
+## 
+## clean_edos = foreach preclean_edos generate TRIM(cve_ent) as (cve_ent:chararray),TRIM(cve_mun) as (cve_mun:chararray), TRIM(nom_loc) as (nom_loc:chararray);
+## solo_edos = filter clean_edos BY (cve_mun == &#39;000&#39;);
+## 
+## preclean_defunc = foreach defunc generate REPLACE(ent_resid,&#39;&quot;&#39;,&#39;&#39;) as (ent_resid:chararray);
+## clean_defunc = foreach preclean_defunc generate TRIM(ent_resid) as (ent_resid:chararray);
+## 
+## joined_edos = JOIN clean_defunc BY ent_resid, solo_edos BY cve_ent;
+## 
+## grouped = GROUP joined_edos BY (cve_ent,nom_loc);
+## 
+## res = foreach grouped GENERATE group, COUNT(joined_edos) as ocurrencias;
+## 
+## res_sorted = ORDER res BY ocurrencias DESC;
+## 
+## flat = foreach res_sorted GENERATE FLATTEN($0), $1;
+## 
+## store flat into &#39;s3://finalmge/pig/b/&#39; using PigStorage(&#39;,&#39;);</code></pre>
+</div>
+<div id="c.-indica-por-entidad-donde-se-registro-el-deceso-ordenado-descendentemente-campo-ent_regis-rightarrow-no-olvides-poner-la-clave-de-cada-entidad-y-el-nombre" class="section level4">
+<h4>c. Indica por entidad donde se registró el deceso ordenado descendentemente, campo ent_regis <span class="math inline">\(\rightarrow\)</span> No olvides poner la clave de cada entidad y el nombre</h4>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/pig/pig_c.pig</code></pre>
+<pre><code>## --- Carga de datos
+## 
+## defunc = LOAD &#39;s3://finalmge/defun_2016.csv&#39; USING PigStorage(&#39;,&#39;) AS (
+## ent_regis:chararray,
+## mun_regis:chararray,
+## ent_resid:chararray,
+## mun_resid:chararray,
+## tloc_resid:chararray,
+## loc_resid:chararray,
+## ent_ocurr:chararray,
+## mun_ocurr:chararray,
+## tloc_ocurr:chararray,
+## loc_ocurr:chararray,
+## causa_def:chararray,
+## lista_mex:chararray,
+## sexo:chararray,
+## edad:chararray,
+## dia_ocurr:chararray,
+## mes_ocurr:chararray,
+## anio_ocur:chararray,
+## dia_regis:chararray,
+## mes_regis:chararray,
+## anio_regis:chararray,
+## dia_nacim:chararray,
+## mes_nacim:chararray,
+## anio_nacim:chararray,
+## ocupacion:chararray,
+## escolarida:chararray,
+## edo_civil:chararray,
+## presunto:chararray,
+## ocurr_trab:chararray,
+## lugar_ocur:chararray,
+## necropsia:chararray,
+## asist_medi:chararray,
+## sitio_ocur:chararray,
+## cond_cert:chararray,
+## nacionalid:chararray,
+## derechohab:chararray,
+## embarazo:chararray,
+## rel_emba:chararray,
+## horas:chararray,
+## minutos:chararray,
+## capitulo:chararray,
+## grupo:chararray,
+## lista1:chararray,
+## gr_lismex:chararray,
+## vio_fami:chararray,
+## area_ur:chararray,
+## edad_agru:chararray,
+## complicaro:chararray,
+## dia_cert:chararray,
+## mes_cert:chararray,
+## anio_cert:chararray,
+## maternas:chararray,
+## lengua:chararray,
+## cond_act:chararray,
+## par_agre:chararray,
+## ent_ocules:chararray,
+## mun_ocules:chararray,
+## loc_ocules:chararray,
+## razon_m:chararray,
+## dis_re_oax:chararray);
+## 
+## edos = LOAD &#39;s3://finalmge/decateml.CSV&#39; USING PigStorage(&#39;,&#39;) AS (
+## cve_ent:chararray,
+## cve_mun:chararray,
+## cve_loc:chararray,
+## nom_loc:chararray);
+## 
+## 
+## --- Inciso C. Indica por entidad donde se registró el deceso ordenado descendentemente, campo ent_regis No olvides poner la clave de cada entidad y el nombre
+## 
+## preclean_edos = FOREACH edos GENERATE REPLACE(cve_ent,&#39;&quot;&#39;,&#39;&#39;) as (cve_ent:chararray),REPLACE(cve_mun,&#39;&quot;&#39;,&#39;&#39;)as (cve_mun:chararray), REPLACE(nom_loc,&#39;&quot;&#39;,&#39;&#39;) as (nom_loc:chararray);  
+## 
+## clean_edos = foreach preclean_edos generate TRIM(cve_ent) as (cve_ent:chararray),TRIM(cve_mun) as (cve_mun:chararray), TRIM(nom_loc) as (nom_loc:chararray);
+## solo_edos = filter clean_edos BY (cve_mun == &#39;000&#39;);
+## 
+## preclean_defunc = foreach defunc generate REPLACE(ent_regis,&#39;&quot;&#39;,&#39;&#39;) as (ent_regis:chararray);
+## clean_defunc = foreach preclean_defunc generate TRIM(ent_regis) as (ent_regis:chararray);
+## 
+## joined_edos = JOIN clean_defunc BY ent_regis, solo_edos BY cve_ent;
+## 
+## grouped = GROUP joined_edos BY (cve_ent,nom_loc);
+## 
+## res = foreach grouped GENERATE group, COUNT(joined_edos) as ocurrencias;
+## 
+## res_sorted = ORDER res BY ocurrencias DESC;
+## 
+## flat = foreach res_sorted GENERATE FLATTEN($0), $1;
+## 
+## store flat into &#39;s3://finalmge/pig/c/&#39; using PigStorage(&#39;,&#39;);</code></pre>
+</div>
+</div>
+<div id="hive" class="section level3">
+<h3>Hive</h3>
+<div id="carga-de-datos" class="section level4">
+<h4>Carga de datos</h4>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/hive/carga_datos.hql</code></pre>
+<pre><code>## -- Iniciamos la base de datos
+## drop database if exists defunciones cascade;
+## 
+## create database if not exists defunciones location &quot;s3://finalmge/hive/defuncionesdb/&quot;;
+## -- Creamos la tabla de las defunciones
+## create external table if not exists defunciones.defun (
+## ent_regis string,
+## mun_regis string,
+## ent_resid string,
+## mun_resid string,
+## tloc_resid string,
+## loc_resid string,
+## ent_ocurr string,
+## mun_ocurr string,
+## tloc_ocurr string,
+## loc_ocurr string,
+## causa_def string,
+## lista_mex string,
+## sexo string,
+## edad string,
+## dia_ocurr string,
+## mes_ocurr string,
+## anio_ocur string,
+## dia_regis string,
+## mes_regis string,
+## anio_regis string,
+## dia_nacim string,
+## mes_nacim string,
+## anio_nacim string,
+## ocupacion string,
+## escolarida string,
+## edo_civil string,
+## presunto string,
+## ocurr_trab string,
+## lugar_ocur string,
+## necropsia string,
+## asist_medi string,
+## sitio_ocur string,
+## cond_cert string,
+## nacionalid string,
+## derechohab string,
+## embarazo string,
+## rel_emba string,
+## horas string,
+## minutos string,
+## capitulo string,
+## grupo string,
+## lista1 string,
+## gr_lismex string,
+## vio_fami string,
+## area_ur string,
+## edad_agru string,
+## complicaro string,
+## dia_cert string,
+## mes_cert string,
+## anio_cert string,
+## maternas string,
+## lengua string,
+## cond_act string,
+## par_agre string,
+## ent_ocules string,
+## mun_ocules string,
+## loc_ocules string,
+## razon_m string,
+## dis_re_oax string)
+## ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;
+## LOCATION &#39;s3://finalmge/hive/defuncionesdb/defun&#39;;
+## 
+## LOAD DATA INPATH &#39;s3://finalmge/datos/defun_2016.csv&#39; INTO table defunciones.defun;
+## 
+## -- Creamos la tabla que el diccionario de causas
+## create external table if not exists defunciones.causas (cve string,
+## descrip string)
+## ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;
+## LOCATION &#39;s3://finalmge/hive/defuncionesdb/causas&#39;;
+## 
+## LOAD DATA INPATH &#39;s3://finalmge/datos/decatcausa.csv&#39; INTO table defunciones.causas;
+## 
+## -- Creamos la tabla que el diccionario de estados
+## create external table if not exists defunciones.estados (cve_ent string, 
+## cve_mun string,
+## cve_loc string,
+## nom_loc string)
+## ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;
+## LOCATION &#39;s3://finalmge/hive/defuncionesdb/estados&#39;;
+## 
+## LOAD DATA INPATH &#39;s3://finalmge/datos/decateml.CSV&#39; INTO table defunciones.estados;
+## 
+## -- Creamos la tabla que el diccionario de genero
+## create external table if not exists defunciones.genero (cve_gen string, 
+## descrip_gen string)
+## ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;
+## LOCATION &#39;s3://finalmge/hive/defuncionesdb/genero&#39;;
+## 
+## LOAD DATA INPATH &#39;s3://finalmge/datos/desexo.csv&#39; INTO table defunciones.genero;
+## 
+## use defunciones;</code></pre>
+</div>
+<div id="a.-cual-es-la-34va-causa-de-muerte-en-mexico-rightarrow-no-olvides-poner-el-nombre-de-la-causa" class="section level4">
+<h4>a. ¿Cuál es la 34va causa de muerte en México? <span class="math inline">\(\rightarrow\)</span> no olvides poner el nombre de la causa</h4>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/hive/incisoa.hql</code></pre>
+<pre><code>## -- a. ¿Cuál es la 34va causa de muerte en México? no olvides poner el nombre de la causa
+## 
+## -- Agrupando por código (aunque esto repite descripciones)
+## with t as(
+## SELECT regexp_replace(causa_def,&#39;&quot;&#39;, &#39;&#39;) as cdef 
+## from defun
+## ),
+## 
+## u as (
+## SELECT cdef, COUNT(cdef) as count 
+## FROM t
+## GROUP BY cdef
+## ),
+## 
+## b as (
+## SELECT regexp_replace(descrip,&#39;&quot;&#39;, &#39;&#39;) as descrip, count 
+## FROM u
+## JOIN
+## causas c
+## on u.cdef == c.cve
+## ),
+## 
+## ranked as (
+## SELECT *, DENSE_RANK() OVER(ORDER BY count DESC) as rank 
+## FROM b
+## )
+## 
+## SELECT * 
+## FROM ranked WHERE rank ==34;</code></pre>
+</div>
+<div id="b.-cual-es-la-7ma-causa-de-muerte-en-mujeres-en-chihuahua-rightarrow-no-olvides-poner-el-nombre-de-la-causa" class="section level4">
+<h4>b. ¿Cuál es la 7ma causa de muerte en mujeres en Chihuahua? <span class="math inline">\(\rightarrow\)</span> no olvides poner el nombre de la causa</h4>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/hive/incisob.hql</code></pre>
+<pre><code>## -- b. ¿Cuál es la 7ma causa de muerte en mujeres en Chihuahua? no olvides poner el nombre de la causa
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+## 
+## with t as(
+## SELECT regexp_replace(causa_def,&#39;&quot;&#39;, &#39;&#39;) as cdef, ent_ocurr, sexo
+## from defun
+## ),
+## 
+## u as (
+## SELECT cdef, regexp_replace(ent_ocurr,&#39;(&quot;\s*) |(\s*&quot;)&#39;, &#39;&#39;) as ent_ocurr, sexo, COUNT(cdef) as count 
+## FROM t
+## GROUP BY cdef, ent_ocurr, sexo
+## ),
+## 
+## e as (
+## SELECT regexp_replace(cve_ent,&#39;(&quot;\s*) |(\s*&quot;)&#39;, &#39;&#39;) as cve_ent, regexp_replace(nom_loc,&#39;(&quot;\s*) |(\s*&quot;)&#39;, &#39;&#39;) as entidad
+## FROM estados                                                                         
+## WHERE regexp_replace(cve_mun,&#39;(&quot;\s*) |(\s*&quot;)&#39;, &#39;&#39;) == 000
+## ),
+## 
+## b as (
+## SELECT regexp_replace(descrip,&#39;&quot;&#39;, &#39;&#39;) as descrip, descrip_gen, entidad, count 
+## FROM u
+## JOIN
+## causas c
+## on (u.cdef == c.cve)
+## JOIN
+## e
+## on (u.ent_ocurr == e.cve_ent)
+## JOIN
+## genero g
+## on (u.sexo == g.cve_gen)
+## ),
+## 
+## ranked as (
+## SELECT *, DENSE_RANK() OVER(ORDER BY count DESC) as rank 
+## FROM b
+## WHERE descrip_gen == &#39;Mujeres&#39; AND entidad == &#39;Chihuahua&#39;
+## )
+## 
+## SELECT * 
+## FROM ranked WHERE rank ==7;</code></pre>
+</div>
+</div>
+<div id="spark-sql" class="section level3">
+<h3>Spark SQL</h3>
+<p><em>Además se puede ver en el archivo html exportado desde Jupyter en la carpeta de sparksql</em></p>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/sparksql/SparkSQL.py</code></pre>
+<pre><code>## 
+## 
+## 
+## # Added libraries.
+## from pyspark.sql import SparkSession
+## from pyspark.sql.functions import *
+## from pyspark.sql.window import Window
+## 
+## 
+## defun = spark.read.csv(&#39;s3://daniel-sharp/decesos/defun_2016.csv&#39;, header =True) 
+## causas = spark.read.csv(&#39;s3://daniel-sharp/decesos/decatcausa.csv&#39;, header =True) 
+## estados = spark.read.csv(&#39;s3://daniel-sharp/decesos/decateml.CSV&#39;, header =True) 
+## genero = spark.read.csv(&#39;s3://daniel-sharp/decesos/desexo.csv&#39;, header =True) 
+## edad = spark.read.csv(&#39;s3://daniel-sharp/decesos/deedad.csv&#39;, header =True) 
+## 
+## 
+## estados_clean = estados.withColumn(&#39;cve_ent&#39;, regexp_replace(&#39;cve_ent&#39;, &#39;\t&#39;, &#39;&#39;)).withColumn(&#39;cve_mun&#39;, regexp_replace(&#39;cve_mun&#39;, &#39;\t&#39;, &#39;&#39;)).filter(&#39;cve_mun == 000&#39;)
+## defun_c = defun.withColumn(&#39;ent_ocurr&#39;, regexp_replace(&#39;ent_ocurr&#39;, &#39;\t&#39;, &#39;&#39;))
+## genero = genero.selectExpr(&quot;DESCRIP as descrip_sexo&quot;, &quot;CVE as cve_sexo&quot;)
+## edad = edad.selectExpr(&quot;DESCRIP as descrip_edad&quot;, &quot;CVE as cve_edad&quot;)
+## 
+## 
+## # a. ¿Cuántos casos de defunción por Hepatitis A hay por entidad? (B150, B159) ordena la salida de forma descendente por número de decesos
+## 
+## defun_c.alias(&#39;a&#39;).join(causas.alias(&#39;b&#39;),col(&#39;a.causa_def&#39;) == col(&#39;b.cve&#39;)).join(estados_clean.alias(&#39;c&#39;),col(&#39;a.ent_ocurr&#39;) == col(&#39;c.cve_ent&#39;)).filter((defun_c[&#39;causa_def&#39;] == &#39;B150&#39;) | (defun_c[&#39;causa_def&#39;] == &#39;B159&#39;)).groupBy(&#39;nom_loc&#39;).count().sort(desc(&#39;count&#39;)).show()
+## 
+## 
+## # b. ¿Cuál es la 6ta causa de defunción por entidad y sexo para las personas de 53 años?
+## 
+## 
+## defun_c.alias(&#39;a&#39;).join(causas.alias(&#39;b&#39;),col(&#39;a.causa_def&#39;) == col(&#39;b.cve&#39;)).join(estados_clean.alias(&#39;c&#39;),col(&#39;a.ent_ocurr&#39;) == col(&#39;c.cve_ent&#39;)).join(genero.alias(&#39;d&#39;),col(&#39;a.sexo&#39;) == col(&#39;d.cve_sexo&#39;)).join(edad.alias(&#39;e&#39;),col(&#39;a.edad&#39;) == col(&#39;e.cve_edad&#39;)).filter(&quot;descrip_edad like &#39;%Cincuenta y tres años%&#39;&quot;).groupBy(&#39;nom_loc&#39;,&#39;DESCRIP&#39;,&#39;descrip_sexo&#39;).count().select(&quot;*&quot;,dense_rank().over(Window.partitionBy(&#39;nom_loc&#39;, &#39;descrip_sexo&#39;).orderBy(desc(&#39;count&#39;))).alias(&#39;rn&#39;)).filter(&#39;rn == 6&#39;).show()</code></pre>
+</div>
+<div id="sparkml" class="section level3">
+<h3>SparkML</h3>
+<p><em>Además se puede ver más claramente en el archivo html exportado desde Jupyter en la carpeta de sparkml. Ese archivo incluye los resultados</em></p>
+<pre class="bash"><code>cat ~/Desktop/Final_Liliana/sparkml/SparkML.py</code></pre>
+<pre><code>## 
+## 
+## # Added libraries.
+## from pyspark.sql import SparkSession
+## from pyspark.sql.functions import *
+## from pyspark.sql.window import Window
+## import numpy as np
+## 
+## pd.set_option(&#39;display.max_columns&#39;, 60)
+## 
+## defun = spark.read.csv(&#39;s3://daniel-sharp/decesos/defun_2016.csv&#39;, header =True) 
+## causas = spark.read.csv(&#39;s3://daniel-sharp/decesos/decatcausa.csv&#39;, header =True) 
+## estados = spark.read.csv(&#39;s3://daniel-sharp/decesos/decateml.CSV&#39;, header =True) 
+## genero = spark.read.csv(&#39;s3://daniel-sharp/decesos/desexo.csv&#39;, header =True) 
+## edad = spark.read.csv(&#39;s3://daniel-sharp/decesos/deedad.csv&#39;, header =True) 
+## escolaridad = spark.read.csv(&#39;s3://daniel-sharp/decesos/deesco.csv&#39;, header =True) 
+## 
+## for colum in defun.columns:
+##     defun = defun.withColumn(colum, regexp_replace(colum, &#39;\t&#39;, &#39;&#39;))
+##     
+## numerics = [&#39;anio_ocur&#39;,&#39;horas&#39;,&#39;anio_nacim&#39;]
+## 
+## for colum in numerics:
+##     defun = defun.withColumn(colum, col(colum).cast(&quot;double&quot;))
+## 
+## estados = estados.withColumn(&#39;cve_ent&#39;, regexp_replace(&#39;cve_ent&#39;, &#39;\t&#39;, &#39;&#39;)).withColumn(&#39;cve_mun&#39;, regexp_replace(&#39;cve_mun&#39;, &#39;\t&#39;, &#39;&#39;)).filter(&#39;cve_mun == 000&#39;)
+## 
+## defun_base = defun.alias(&#39;a&#39;).join(escolaridad.alias(&#39;b&#39;), col(&#39;a.escolarida&#39;) == col(&#39;b.CVE&#39;)).withColumn(&#39;edad&#39;, defun.anio_ocur - defun.anio_nacim).filter(&#39;edad &lt; 300&#39;).filter(&#39;edad &gt; 0&#39;).filter(&#39;horas &lt; 24&#39;).filter(&#39;escolarida &lt; 24&#39;).withColumn(&#39;id&#39;, monotonically_increasing_id()).withColumn(&quot;anios_edu&quot;, col(&quot;anios_edu&quot;).cast(&quot;double&quot;)).drop(&#39;escolarida&#39;)
+## 
+## defun_base.limit(10).show()
+## 
+## 
+## # Elegimos utilizar las variables de edad y anios de educación para ejecutar el modelo de k-means pues son la que identificamos que mejor separan las observaciones en causas de defunción. Intentamos ejecutar el modelo con otras combinaciones de variables, por ejemplo: incluyendo año de defunción y hora de defunción pero vimos que no eran informativas y metían ruido en los clústers. Además, elegimos utilizar 4 clústers porque, bajo nuestro objetivo de segmentar las causas de defunción, lograbamos la mayor heterogeneidad de causas entre los clusters.
+## 
+## features = [&#39;edad&#39;,&#39;anios_edu&#39;]
+## 
+## from pyspark.ml.clustering import KMeans
+## from pyspark.ml.feature import VectorAssembler, StandardScaler
+## from pyspark.ml.evaluation import ClusteringEvaluator
+## from pyspark.ml import Pipeline
+## 
+## scaler = StandardScaler(inputCol=&#39;grouped_features&#39;, outputCol= &#39;features&#39;, withMean=True)
+## assembler = VectorAssembler(inputCols = features, outputCol = &#39;grouped_features&#39;)
+## kmeans = KMeans(k=4, seed=1)
+## pipe = Pipeline(stages = [assembler, scaler, kmeans])
+## 
+## model = pipe.fit(defun_base).transform(defun_base)
+## 
+## 
+## # Como métrica adicional para evaluar nuestro modelo utilizamos la función de Clustering Evaluator, que calcula la medida de Silueta utilizando la distancia Euclidiana cuadrada. Su valor va de -1 a 1 y un valor más cercano a uno indica una mejor separación entre los grupos y menor separación entre los grupos.  
+## # 
+## # Obtuvimos un valor de 0.51, que es relativamente bueno.
+## 
+## evaluator = ClusteringEvaluator()
+## evaluator.evaluate(model)
+## 
+## # El modelo separó los datos en 4 grupos. El número de registros en cada uno se muestra a continuación:
+## 
+## model.groupBy(&#39;prediction&#39;).count().show()
+## 
+## # El modelo segmentó por edades, generando un grupo de &#39;jóvenes&#39; (grupo 2) y 3 de adultos mayores:
+## 
+## print(&quot;Analisis Descriptivo para Edad&quot;)
+## model.groupBy(&#39;prediction&#39;).agg((mean(model.edad)).alias(&#39;Promedio&#39;),                                      (stddev(model.edad)).alias(&#39;Desviación&#39;),                                     (max(model.edad)).alias(&#39;Máximo&#39;),                                     (min(model.edad)).alias(&#39;Mínimo&#39;)).sort(&#39;prediction&#39;).show()
+## 
+## # En cuanto a años de estudio, hay un grupo de &#39;alta educación&#39; (grupo 3), uno de baja educación que corresponde con el de los más ancianos (grupo 0). Como intermedios están el grupo 1 y 2.
+## 
+## print(&quot;Analisis Descriptivo para años de estudio&quot;)
+## model.groupBy(&#39;prediction&#39;).agg((mean(model.anios_edu)).alias(&#39;Promedio&#39;),                                      (stddev(model.anios_edu)).alias(&#39;Desviación&#39;),                                     (max(model.anios_edu)).alias(&#39;Máximo&#39;),                                     (min(model.anios_edu)).alias(&#39;Mínimo&#39;)).sort(&#39;prediction&#39;).show()
+## 
+## # En cuanto a diferenciación en las enfermedades de cada grupo, estas varían y se pueden explicar por las diferencias en edad promedio en los grupos. Por ejemplo, la principal causa de muerte en el grupo de los jóvenes es la violencia. Mientras que la de mayor incidencia en los otros es infarto. En el grupo de mayor edad aparecen enfermedades respiratorias como otras causas comunes. En los grupos intermedios aparece la cirrosis como una causa común.
+## 
+## causas_por_grupo = model.alias(&#39;a&#39;).groupBy(&#39;prediction&#39;,&#39;a.causa_def&#39;).count().select(&quot;*&quot;,dense_rank().over(Window.partitionBy(&#39;prediction&#39;).orderBy(desc(&#39;count&#39;))).alias(&#39;rn&#39;)).filter(&#39;rn &lt; 6&#39;).join(causas.alias(&#39;b&#39;), col(&#39;a.causa_def&#39;) == col(&#39;b.CVE&#39;)).drop(&#39;causa_def&#39;,&#39;CVE&#39;)
+## 
+## causas_por_grupo.show()
+## 
+## # Como se puede observar en la tabla anterior, las causas de muerte varían en los diferentes grupos pues la edad esta claramente correlacionada con la causa de muerte. Por ejemplo, el grupo 2, correspondiente a los jóvenes, muestra causas relacionadas con violencia y accidentes. Mientras que en los grupos de mayor edad promedio están relacionadas con enfermedades. Por otro lado, dentro de estos grupos, las enfermedades también varían, por ejemplo, con el grupo 0, que es el de edad promedio de 85, las causas de muerte se diferencian de los otros por incluir problemas respiratorios.
+## 
+## causas_por_estado = model.alias(&#39;a&#39;).groupBy(&#39;prediction&#39;,&#39;a.ent_ocurr&#39;).count().select(&quot;*&quot;,dense_rank().over(Window.partitionBy(&#39;prediction&#39;).orderBy(desc(&#39;count&#39;))).alias(&#39;rn&#39;)).filter(&#39;rn &lt; 6&#39;).join(estados.alias(&#39;b&#39;), col(&#39;a.ent_ocurr&#39;) == col(&#39;b.cve_ent&#39;)).drop(&#39;ent_ocurr&#39;,&#39;cve_ent&#39;,&#39;cve_loc&#39;,&#39;cve_mun&#39;)
+## 
+## causas_por_estado.show()
+## 
+## # No hay mucha diferenciación en los estados donde ocurren los decesos, como es de esperar en todos los grupos se encuentra la Ciudad de México y el Estado de México en los primeros lugares.
+## 
+## model.groupBy(&#39;prediction&#39;).agg((mean(model.sexo)-1).alias(&#39;% mujeres&#39;)).sort(&#39;prediction&#39;).show()
+## 
+## # Es interesante notar que en el grupo de los más jóvenes (grupo 2), donde las causas de muerte están relacionadas con violencia, únicamente 3 de cada 10 muertes son mujeres. Esta proporción va aumentando junto con el rango de edades, que se puede explicar a que, dado que las mujeres tienen mayor esperanza de vida, la proporción de mujeres del total de la población va aumentando con la edad.
+## 
+## print(&quot;Analisis Descriptivo para Horas de Defunción&quot;)
+## model.groupBy(&#39;prediction&#39;).agg((mean(model.horas)).alias(&#39;Promedio&#39;),                                      (stddev(model.horas)).alias(&#39;Desviación&#39;),                                     (max(model.horas)).alias(&#39;Máximo&#39;),                                     (min(model.horas)).alias(&#39;Mínimo&#39;)).sort(&#39;prediction&#39;).show()
+## 
+## # No hay diferencia en esta variable.
+## 
+## # ### Análisis de resultados:
+## # 
+## # Elegimos utilizar 4 grupos porque observamos que con esta configuración se logra hacer una separación de las observaciones en grupos característicos, diferenciados principalmente por la variable &#39;edad&#39; y por ende, de causas de muerte. La variable de año no aporta información para segmentar, pues más del 90% de las observaciones ocurrieron en 2015 y 2016.</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

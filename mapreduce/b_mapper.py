@@ -5,7 +5,7 @@ import re
 # Generamos diccionario 
 vio_dic = {}
 # Leemos la tabla 
-vio = open('../datos/deviofam.csv','r')
+vio = open('deviofam.csv','r')
 # Llenamos el diccionario con los valores de la tabla
 for line in vio:
     line = line.strip()

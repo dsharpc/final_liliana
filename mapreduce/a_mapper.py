@@ -5,7 +5,7 @@ import re
 # Generamos diccionario con los nombres de los meses
 meses_dic = {}
 # Leemos la tabla de los meses a memoria
-meses = open('../datos/demeses.csv','r')
+meses = open('demeses.csv','r')
 # Llenamos el diccionario con los valores de la tabla
 for line in meses:
     line = line.strip()

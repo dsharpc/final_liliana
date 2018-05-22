@@ -1,0 +1,103 @@
+---
+title: "Examen Final MGE"
+author: "Francisco Bahena, Cristian Challu, Eduardo Hidalgo, Daniel Sharp"
+date: "May 21, 2018"
+output:
+  html_document:
+    self_contained: no
+---
+
+### Imagen del clúster de MapReduce/Pig/Hive
+
+![Cluster](~/Desktop/Final_Liliana/fotocluster.png)
+  
+  
+### Imagen del clúster de Spark
+
+![Cluster](~/Desktop/Final_Liliana/cluster_spark.png)
+
+
+
+### MapReduce:  
+  
+####  a. ¿Cuántas defunciones tenemos por mes? campo mes_ocurr  
+**Mapper**
+
+```{bash}
+cat ~/Desktop/Final_Liliana/mapreduce/a_mapper.py
+```
+**Reducer**
+
+```{bash}
+cat ~/Desktop/Final_Liliana/mapreduce/a_reducer.py
+```
+
+####  b. ¿Cuántas defunciones tenemos por violencia familiar? campo vio_fami 
+**Mapper**
+
+```{bash}
+cat ~/Desktop/Final_Liliana/mapreduce/b_mapper.py
+```
+**Reducer**
+
+```{bash}
+cat ~/Desktop/Final_Liliana/mapreduce/b_reducer.py
+```
+  
+  
+### Pig  
+
+#### a. Indica el total de decesos en ese estado $\rightarrow$ No olivides poner la clave de la entidad y el nombre  
+```{bash}
+cat ~/Desktop/Final_Liliana/pig/pig_a.pig
+```
+
+#### b. Indica por entidad donde residía ordenado descendentemente por número de decesos, campo ent_resid $\rightarrow$ No olvides poner la clave de cada entidad y el nombre  
+  
+```{bash}
+cat ~/Desktop/Final_Liliana/pig/pig_b.pig
+```
+
+
+#### c. Indica por entidad donde se registró el deceso ordenado descendentemente, campo ent_regis $\rightarrow$ No olvides poner la clave de cada entidad y el nombre
+  
+```{bash}
+cat ~/Desktop/Final_Liliana/pig/pig_c.pig
+```  
+
+### Hive  
+  
+#### Carga de datos  
+
+```{bash}
+cat ~/Desktop/Final_Liliana/hive/carga_datos.hql
+```
+
+  
+#### a. ¿Cuál es la 34va causa de muerte en México? $\rightarrow$ no olvides poner el nombre de la causa  
+```{bash}
+cat ~/Desktop/Final_Liliana/hive/incisoa.hql
+```  
+  
+#### b. ¿Cuál es la 7ma causa de muerte en mujeres en Chihuahua? $\rightarrow$ no olvides poner el nombre de la causa 
+```{bash}
+cat ~/Desktop/Final_Liliana/hive/incisob.hql
+```  
+
+### Spark SQL   
+*Además se puede ver en el archivo html exportado desde Jupyter en la carpeta de sparksql*
+
+```{bash}
+cat ~/Desktop/Final_Liliana/sparksql/SparkSQL.py
+```
+
+
+
+### SparkML  
+*Además se puede ver más claramente en el archivo html exportado desde Jupyter en la carpeta de sparkml. Ese archivo incluye los resultados*  
+En la carpeta para SparkML se incluyen las salidas tanto de la ejecución en el clúster como las de local. Por alguna razón los resultados fueron diferentes en estas dos ejecucuiones a pesar de haber utilizado un seed para fittear el modelo de Kmeans. El análisis descriptivo se había realizado con los resultados obtenidos en la ejecución en local, y se muestran en el archivo HTML en la carpeta de SparkML.
+
+```{bash}
+cat ~/Desktop/Final_Liliana/sparkml/SparkML.py
+```
+

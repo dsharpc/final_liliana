@@ -1,0 +1,21 @@
+prediction,count,rn,DESCRIP
+1,31592,1,"Infarto agudo del miocardio, sin otra especificación"
+1,14498,2,"Diabetes mellitus no insulinodependiente, con complicaciones renales"
+1,13604,3,"Diabetes mellitus no insulinodependiente, sin mención de complicación"
+1,6526,4,"Diabetes mellitus no especificada, sin mención de complicación"
+1,6445,5,Otras cirrosis del hígado y las no especificadas
+3,10463,1,"Infarto agudo del miocardio, sin otra especificación"
+3,3282,2,"Diabetes mellitus no insulinodependiente, sin mención de complicación"
+3,3150,3,"Diabetes mellitus no insulinodependiente, con complicaciones renales"
+3,1850,4,Otras cirrosis del hígado y las no especificadas
+3,1810,5,"Neumonía, no especificada"
+2,6816,1,"Agresión con disparo de otras armas de fuego, y las no especificadas en calles y carreteras"
+2,6683,2,"Infarto agudo del miocardio, sin otra especificación"
+2,3775,3,Cirrosis hepática alcohólica
+2,3065,4,Otras cirrosis del hígado y las no especificadas
+2,3027,5,"Diabetes mellitus no insulinodependiente, con complicaciones renales"
+0,35514,1,"Infarto agudo del miocardio, sin otra especificación"
+0,9656,2,"Diabetes mellitus no insulinodependiente, sin mención de complicación"
+0,7131,3,"Enfermedad pulmonar obstructiva crónica, no especificada"
+0,6638,4,"Diabetes mellitus no insulinodependiente, con complicaciones renales"
+0,5508,5,"Neumonía, no especificada"
